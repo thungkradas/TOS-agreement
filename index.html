@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agreement Generator - thungkradas</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body { font-family: sans-serif; display: flex; gap: 20px; padding: 20px; background-color: #f4f4f4; }
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 50%; }
+        h3 { margin-top: 0; }
+        label { display: block; margin-top: 10px; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        textarea { height: 150px; resize: vertical; }
+        button { margin-top: 20px; padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        button:hover { background: #555; }
+        
+        /* ส่วนแสดงผล */
+        #preview-container {
+            padding: 40px;
+            background-color: #202020; /* สีพื้นหลังเริ่มต้นแบบรูป */
+            color: #ffffff;
+            border-radius: 8px;
+            white-space: pre-wrap; /* ให้ขึ้นบรรทัดใหม่ตามที่พิมพ์ */
+        }
+        .tabs { margin-bottom: 20px; display: flex; gap: 10px; }
+        .tab { padding: 5px 10px; background: #333; border-radius: 4px; font-size: 14px; color: #aaa; cursor: pointer; }
+        .tab.active { background: #444; color: #fff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="panel">
+        <h3>⚙️ ตั้งค่าข้อตกลง</h3>
+        
+        <label>หัวข้อ (Tab):</label>
+        <input type="text" id="tabText" value="สิทธิ์ส่วนตัว" oninput="updatePreview()">
+
+        <label>หัวเรื่องหลัก:</label>
+        <input type="text" id="titleText" value="สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)" oninput="updatePreview()">
+
+        <label>รายละเอียดข้อตกลง:</label>
+        <textarea id="bodyText" oninput="updatePreview()">ผู้ที่ได้รับข้อตกลงนี้ถือเป็นผู้ว่าจ้างของ thungkradas โดยมีข้อตกลงร่วมกันดังนี้...</textarea>
+
+        <label>ขนาดตัวอักษร:</label>
+        <input type="range" id="fontSize" min="12" max="30" value="14" oninput="updatePreview()">
+
+        <label>สีพื้นหลัง:</label>
+        <input type="color" id="bgColor" value="#202020" oninput="updatePreview()">
+
+        <label>สีตัวอักษร:</label>
+        <input type="color" id="textColor" value="#ffffff" oninput="updatePreview()">
+
+        <button onclick="saveAsJPG()">💾 บันทึกเป็น JPG</button>
+    </div>
+
+    <div class="panel">
+        <h3>👀 แสดงผล</h3>
+        <div id="preview-container">
+            <div class="tabs">
+                <span class="tab active" id="previewTab">สิทธิ์ส่วนตัว</span>
+            </div>
+            <h2 id="previewTitle" style="margin-top: 0;">สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)</h2>
+            <div id="previewBody">ผู้ที่ได้รับข้อตกลงนี้ถือเป็นผู้ว่าจ้างของ thungkradas โดยมีข้อตกลงร่วมกันดังนี้...</div>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            // อัปเดตข้อความ
+            document.getElementById('previewTab').innerText = document.getElementById('tabText').value;
+            document.getElementById('previewTitle').innerText = document.getElementById('titleText').value;
+            document.getElementById('previewBody').innerText = document.getElementById('bodyText').value;
+            
+            // อัปเดตสไตล์
+            const previewBox = document.getElementById('preview-container');
+            previewBox.style.fontSize = document.getElementById('fontSize').value + 'px';
+            previewBox.style.backgroundColor = document.getElementById('bgColor').value;
+            previewBox.style.color = document.getElementById('textColor').value;
+        }
+
+        function saveAsJPG() {
+            const previewBox = document.getElementById('preview-container');
+            // ใช้ html2canvas แปลง div เป็น canvas
+            html2canvas(previewBox, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'agreement-thungkradas.jpg';
+                link.href = canvas.toDataURL('image/jpeg');
+                link.click();
+            });
+        }
+        
+        // รันครั้งแรกเพื่อเซ็ตค่า
+        updatePreview();
+    </script>
+
+</body>
+</html>
