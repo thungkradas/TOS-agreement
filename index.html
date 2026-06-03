@@ -13,38 +13,43 @@
         label { display: block; margin-top: 10px; font-size: 14px; font-weight: bold; }
         input[type="text"], select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; font-family: 'Prompt', sans-serif; }
         textarea { height: 80px; resize: vertical; }
-        button { margin-top: 20px; padding: 10px 20px; color: white; border: none; cursor: pointer; border-radius: 4px; font-family: 'Prompt', sans-serif; width: 100%; margin-bottom: 10px; }
+        button { padding: 10px 20px; color: white; border: none; cursor: pointer; border-radius: 4px; font-family: 'Prompt', sans-serif; width: 100%; margin-bottom: 10px; margin-top: 10px; }
         .btn-jpg { background: #333; }
         .btn-jpg:hover { background: #555; }
         .btn-save { background: #0f9d58; }
         .btn-save:hover { background: #0b8043; }
+        .btn-small { width: auto; margin: 0; padding: 8px 12px; background: #4285f4; }
         
-        /* ตั้งค่าแยกพารากราฟ */
         .para-box { border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 4px; background: #fafafa; }
         .inline-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; font-size: 14px; }
         .inline-controls label { margin-top: 0; font-weight: normal; display: flex; align-items: center; gap: 5px; }
         .inline-controls input[type="number"] { width: 60px; padding: 4px; }
         .inline-controls input[type="color"] { width: 30px; height: 30px; padding: 0; border: none; cursor: pointer; }
 
-        #preview-container {
-            padding: 40px;
-            background-color: #ffffff;
-            color: #000000;
-            border-radius: 8px;
-            white-space: pre-wrap;
-            transition: all 0.3s;
-            text-align: left; /* บังคับชิดซ้าย */
-        }
+        #preview-container { padding: 40px; background-color: #ffffff; color: #000000; border-radius: 8px; white-space: pre-wrap; transition: all 0.3s; text-align: left; }
         .tabs { margin-bottom: 20px; display: inline-block; }
         .tab { padding: 5px 15px; background: #333; border-radius: 4px; font-size: 14px; color: #fff; font-weight: bold; }
         .divider { border-bottom: 1px solid #ccc; margin: 15px 0; display: none; }
         .contact-box { margin-top: 20px; font-size: 12px; }
         .preview-para { margin-bottom: 10px; }
+        
+        .load-box { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #bbdefb; }
     </style>
 </head>
 <body>
 
     <div class="panel">
+        <div class="load-box">
+            <h3 style="margin-bottom: 10px; font-size: 16px;">📥 ดึงข้อมูลที่เคยบันทึก</h3>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <select id="savedRecords" style="margin: 0; flex: 1;">
+                    <option value="">-- กดปุ่มโหลดข้อมูล --</option>
+                </select>
+                <button class="btn-small" onclick="fetchData()" style="background: #f4b400;">🔄 โหลดชื่อ</button>
+                <button class="btn-small" onclick="loadSelected()">📂 เปิดอ่าน</button>
+            </div>
+        </div>
+
         <h3>⚙️ ตั้งค่าข้อตกลง</h3>
         
         <label>ฟอนต์หลัก:</label>
@@ -69,7 +74,6 @@
 
         <label>รายละเอียดข้อตกลง (4 พารากราฟ):</label>
         
-        <!-- พารากราฟ 1 -->
         <div class="para-box">
             <textarea id="p1Text" oninput="updatePreview()">พารากราฟที่ 1...</textarea>
             <div class="inline-controls">
@@ -80,7 +84,6 @@
             </div>
         </div>
 
-        <!-- พารากราฟ 2 -->
         <div class="para-box">
             <textarea id="p2Text" oninput="updatePreview()">พารากราฟที่ 2...</textarea>
             <div class="inline-controls">
@@ -91,7 +94,6 @@
             </div>
         </div>
 
-        <!-- พารากราฟ 3 -->
         <div class="para-box">
             <textarea id="p3Text" oninput="updatePreview()">พารากราฟที่ 3...</textarea>
             <div class="inline-controls">
@@ -102,7 +104,6 @@
             </div>
         </div>
 
-        <!-- พารากราฟ 4 -->
         <div class="para-box">
             <textarea id="p4Text" oninput="updatePreview()">พารากราฟที่ 4...</textarea>
             <div class="inline-controls">
@@ -143,6 +144,43 @@
     </div>
 
     <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzmvcY8zJdovMKm6HwMCc3ADDW96MnadEtX67HDzY-FSf39fBmeLUkebIdCyh2BR7xALQ/exec';
+        let fetchedData = [];
+
+        function fetchData() {
+            const select = document.getElementById('savedRecords');
+            select.innerHTML = '<option>กำลังโหลด...</option>';
+            
+            fetch(WEB_APP_URL)
+            .then(response => response.json())
+            .then(data => {
+                fetchedData = data;
+                select.innerHTML = '<option value="">-- เลือกข้อตกลงที่ต้องการ --</option>';
+                data.forEach((item, index) => {
+                    select.innerHTML += `<option value="${index}">${item.title}</option>`;
+                });
+            })
+            .catch(error => {
+                select.innerHTML = '<option value="">โหลดไม่สำเร็จ ลองใหม่อีกครั้ง</option>';
+            });
+        }
+
+        function loadSelected() {
+            const index = document.getElementById('savedRecords').value;
+            if (index === "") return;
+            
+            const item = fetchedData[index];
+            document.getElementById('titleText').value = item.title;
+            
+            const paras = item.body.split('\n\n');
+            document.getElementById('p1Text').value = paras[0] || '';
+            document.getElementById('p2Text').value = paras[1] || '';
+            document.getElementById('p3Text').value = paras[2] || '';
+            document.getElementById('p4Text').value = paras[3] || '';
+            
+            updatePreview();
+        }
+
         function applyStyle(num) {
             const el = document.getElementById(`previewP${num}`);
             el.innerText = document.getElementById(`p${num}Text`).value;
@@ -154,7 +192,6 @@
         }
 
         function updatePreview() {
-            // อัปเดตส่วนหัวและพื้นหลัง
             const previewBox = document.getElementById('preview-container');
             previewBox.style.fontFamily = document.getElementById('fontFamily').value;
             previewBox.style.backgroundColor = document.getElementById('bgColor').value;
@@ -166,13 +203,11 @@
             document.getElementById('previewTitle').innerText = document.getElementById('titleText').value;
             document.getElementById('previewTitle').style.color = document.getElementById('titleColor').value;
             
-            // อัปเดต 4 พารากราฟ
             for(let i=1; i<=4; i++) { applyStyle(i); }
 
             document.getElementById('previewContact').innerText = document.getElementById('contactText').value;
-            document.getElementById('previewContact').style.color = document.getElementById('titleColor').value; // ใช้สีเดียวกับหัวเรื่อง
+            document.getElementById('previewContact').style.color = document.getElementById('titleColor').value;
 
-            // เส้นคั่นและกรอบ
             document.getElementById('previewDivider').style.display = document.getElementById('showDivider').checked ? 'block' : 'none';
             document.getElementById('previewDivider').style.borderColor = document.getElementById('titleColor').value;
             
@@ -198,7 +233,6 @@
             const originalText = button.innerText;
             button.innerText = "กำลังบันทึก...";
             
-            // รวมเนื้อหาทั้ง 4 พารากราฟคั่นด้วยบรรทัดใหม่
             const allBodyText = [
                 document.getElementById('p1Text').value,
                 document.getElementById('p2Text').value,
@@ -211,8 +245,6 @@
                 body: allBodyText
             };
 
-            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxo5F7gqCcite3dbdRJhLYnDtSWOb0JSPxARw9k4-cg4dyJH9d1-g0eZi1FoXHHOLtmkw/exec';
-
             fetch(WEB_APP_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -221,6 +253,7 @@
             .then(response => {
                 alert("บันทึกข้อมูลสำเร็จ!");
                 button.innerText = originalText;
+                fetchData(); 
             })
             .catch(error => {
                 alert("เกิดข้อผิดพลาดในการบันทึก");
