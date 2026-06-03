@@ -7,18 +7,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: 'Prompt', sans-serif; display: flex; gap: 20px; padding: 20px; background-color: #f4f4f4; }
-        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 50%; height: fit-content;}
+        body { font-family: 'Prompt', sans-serif; display: flex; gap: 20px; padding: 20px; background-color: #f4f4f4; align-items: flex-start; }
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 50%; max-height: 90vh; overflow-y: auto; }
         h3 { margin-top: 0; }
         label { display: block; margin-top: 10px; font-size: 14px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; font-family: 'Prompt', sans-serif; }
-        textarea { height: 100px; resize: vertical; }
+        input[type="text"], select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; font-family: 'Prompt', sans-serif; }
+        textarea { height: 80px; resize: vertical; }
         button { margin-top: 20px; padding: 10px 20px; color: white; border: none; cursor: pointer; border-radius: 4px; font-family: 'Prompt', sans-serif; width: 100%; margin-bottom: 10px; }
         .btn-jpg { background: #333; }
         .btn-jpg:hover { background: #555; }
         .btn-save { background: #0f9d58; }
         .btn-save:hover { background: #0b8043; }
         
+        /* ตั้งค่าแยกพารากราฟ */
+        .para-box { border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 4px; background: #fafafa; }
+        .inline-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; font-size: 14px; }
+        .inline-controls label { margin-top: 0; font-weight: normal; display: flex; align-items: center; gap: 5px; }
+        .inline-controls input[type="number"] { width: 60px; padding: 4px; }
+        .inline-controls input[type="color"] { width: 30px; height: 30px; padding: 0; border: none; cursor: pointer; }
+
         #preview-container {
             padding: 40px;
             background-color: #ffffff;
@@ -26,11 +33,13 @@
             border-radius: 8px;
             white-space: pre-wrap;
             transition: all 0.3s;
+            text-align: left; /* บังคับชิดซ้าย */
         }
         .tabs { margin-bottom: 20px; display: inline-block; }
         .tab { padding: 5px 15px; background: #333; border-radius: 4px; font-size: 14px; color: #fff; font-weight: bold; }
         .divider { border-bottom: 1px solid #ccc; margin: 15px 0; display: none; }
         .contact-box { margin-top: 20px; font-size: 12px; }
+        .preview-para { margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -38,40 +47,189 @@
     <div class="panel">
         <h3>⚙️ ตั้งค่าข้อตกลง</h3>
         
-        <label>ฟอนต์ข้อความ:</label>
+        <label>ฟอนต์หลัก:</label>
         <select id="fontFamily" onchange="updatePreview()">
             <option value="'Prompt', sans-serif">Prompt</option>
             <option value="'Sarabun', sans-serif">Sarabun</option>
             <option value="sans-serif">System Default</option>
         </select>
 
+        <label>สีพื้นหลังรวม:</label>
+        <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()">
+
         <label>หัวข้อ (Tab):</label>
-        <input type="text" id="tabText" value="สิทธิ์ส่วนตัว" oninput="updatePreview()">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="tabText" value="สิทธิ์ส่วนตัว" oninput="updatePreview()">
+            <input type="color" id="tabColor" value="#333333" oninput="updatePreview()" title="สีพื้นหลัง Tab">
+        </div>
 
         <label>หัวเรื่องหลัก:</label>
         <input type="text" id="titleText" value="สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)" oninput="updatePreview()">
+        <input type="color" id="titleColor" value="#000000" oninput="updatePreview()" style="margin-top: 5px;" title="สีหัวเรื่อง">
 
-        <label>รายละเอียดข้อตกลง:</label>
-        <textarea id="bodyText" oninput="updatePreview()">พิมพ์รายละเอียดที่นี่...</textarea>
+        <label>รายละเอียดข้อตกลง (4 พารากราฟ):</label>
+        
+        <!-- พารากราฟ 1 -->
+        <div class="para-box">
+            <textarea id="p1Text" oninput="updatePreview()">พารากราฟที่ 1...</textarea>
+            <div class="inline-controls">
+                <label><input type="checkbox" id="p1Bold" onchange="updatePreview()"> หนา</label>
+                <label><input type="checkbox" id="p1Italic" onchange="updatePreview()"> เอียง</label>
+                <label>ขนาด: <input type="number" id="p1Size" value="16" oninput="updatePreview()"> px</label>
+                <label>สี: <input type="color" id="p1Color" value="#000000" oninput="updatePreview()"></label>
+            </div>
+        </div>
+
+        <!-- พารากราฟ 2 -->
+        <div class="para-box">
+            <textarea id="p2Text" oninput="updatePreview()">พารากราฟที่ 2...</textarea>
+            <div class="inline-controls">
+                <label><input type="checkbox" id="p2Bold" onchange="updatePreview()"> หนา</label>
+                <label><input type="checkbox" id="p2Italic" onchange="updatePreview()"> เอียง</label>
+                <label>ขนาด: <input type="number" id="p2Size" value="16" oninput="updatePreview()"> px</label>
+                <label>สี: <input type="color" id="p2Color" value="#000000" oninput="updatePreview()"></label>
+            </div>
+        </div>
+
+        <!-- พารากราฟ 3 -->
+        <div class="para-box">
+            <textarea id="p3Text" oninput="updatePreview()">พารากราฟที่ 3...</textarea>
+            <div class="inline-controls">
+                <label><input type="checkbox" id="p3Bold" onchange="updatePreview()"> หนา</label>
+                <label><input type="checkbox" id="p3Italic" onchange="updatePreview()"> เอียง</label>
+                <label>ขนาด: <input type="number" id="p3Size" value="16" oninput="updatePreview()"> px</label>
+                <label>สี: <input type="color" id="p3Color" value="#000000" oninput="updatePreview()"></label>
+            </div>
+        </div>
+
+        <!-- พารากราฟ 4 -->
+        <div class="para-box">
+            <textarea id="p4Text" oninput="updatePreview()">พารากราฟที่ 4...</textarea>
+            <div class="inline-controls">
+                <label><input type="checkbox" id="p4Bold" onchange="updatePreview()"> หนา</label>
+                <label><input type="checkbox" id="p4Italic" onchange="updatePreview()"> เอียง</label>
+                <label>ขนาด: <input type="number" id="p4Size" value="16" oninput="updatePreview()"> px</label>
+                <label>สี: <input type="color" id="p4Color" value="#000000" oninput="updatePreview()"></label>
+            </div>
+        </div>
 
         <label>ช่องทางติดต่อ:</label>
         <textarea id="contactText" oninput="updatePreview()">ติดต่อ: thungkradas</textarea>
 
-        <label>ตัวเลือกตกแต่ง:</label>
+        <label>ตัวเลือกตกแต่งเพิ่มเติม:</label>
         <input type="checkbox" id="showDivider" style="width: auto;" onchange="updatePreview()"> <span style="font-size: 14px;">แสดงเส้นคั่นข้อความ</span><br>
         <input type="checkbox" id="showBorder" style="width: auto;" onchange="updatePreview()"> <span style="font-size: 14px;">ใส่กรอบให้หน้าแสดงผล</span>
 
-        <label>ขนาดตัวอักษรเนื้อหา:</label>
-        <input type="range" id="fontSize" min="12" max="30" value="16" oninput="updatePreview()">
-
-        <label>สีพื้นหลัง:</label>
-        <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()">
-
-        <label>สีตัวอักษร:</label>
-        <input type="color" id="textColor" value="#000000" oninput="updatePreview()">
-
-        <label>สีกล่องหัวข้อ (Tab):</label>
-        <input type="color" id="tabColor" value="#333333" oninput="updatePreview()">
-
         <button class="btn-jpg" onclick="saveAsJPG()">💾 บันทึกเป็นรูป JPG</button>
         <button class="btn-save" onclick="saveToDatabase(event)">☁️ บันทึกข้อมูลระบบหลังบ้าน</button>
+    </div>
+
+    <div class="panel">
+        <h3>👀 แสดงผล</h3>
+        <div id="preview-container">
+            <div class="tabs">
+                <span class="tab" id="previewTab">สิทธิ์ส่วนตัว</span>
+            </div>
+            <h2 id="previewTitle" style="margin-top: 10px;">สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)</h2>
+            <div id="previewDivider" class="divider"></div>
+            
+            <div id="previewP1" class="preview-para"></div>
+            <div id="previewP2" class="preview-para"></div>
+            <div id="previewP3" class="preview-para"></div>
+            <div id="previewP4" class="preview-para"></div>
+
+            <div id="previewContact" class="contact-box">ติดต่อ: thungkradas</div>
+        </div>
+    </div>
+
+    <script>
+        function applyStyle(num) {
+            const el = document.getElementById(`previewP${num}`);
+            el.innerText = document.getElementById(`p${num}Text`).value;
+            el.style.fontWeight = document.getElementById(`p${num}Bold`).checked ? 'bold' : 'normal';
+            el.style.fontStyle = document.getElementById(`p${num}Italic`).checked ? 'italic' : 'normal';
+            el.style.fontSize = document.getElementById(`p${num}Size`).value + 'px';
+            el.style.color = document.getElementById(`p${num}Color`).value;
+            el.style.display = document.getElementById(`p${num}Text`).value.trim() === '' ? 'none' : 'block';
+        }
+
+        function updatePreview() {
+            // อัปเดตส่วนหัวและพื้นหลัง
+            const previewBox = document.getElementById('preview-container');
+            previewBox.style.fontFamily = document.getElementById('fontFamily').value;
+            previewBox.style.backgroundColor = document.getElementById('bgColor').value;
+
+            document.getElementById('previewTab').innerText = document.getElementById('tabText').value;
+            document.getElementById('previewTab').style.backgroundColor = document.getElementById('tabColor').value;
+            document.getElementById('previewTab').style.color = document.getElementById('bgColor').value;
+
+            document.getElementById('previewTitle').innerText = document.getElementById('titleText').value;
+            document.getElementById('previewTitle').style.color = document.getElementById('titleColor').value;
+            
+            // อัปเดต 4 พารากราฟ
+            for(let i=1; i<=4; i++) { applyStyle(i); }
+
+            document.getElementById('previewContact').innerText = document.getElementById('contactText').value;
+            document.getElementById('previewContact').style.color = document.getElementById('titleColor').value; // ใช้สีเดียวกับหัวเรื่อง
+
+            // เส้นคั่นและกรอบ
+            document.getElementById('previewDivider').style.display = document.getElementById('showDivider').checked ? 'block' : 'none';
+            document.getElementById('previewDivider').style.borderColor = document.getElementById('titleColor').value;
+            
+            if (document.getElementById('showBorder').checked) {
+                previewBox.style.border = `2px solid ${document.getElementById('titleColor').value}`;
+            } else {
+                previewBox.style.border = 'none';
+            }
+        }
+
+        function saveAsJPG() {
+            const previewBox = document.getElementById('preview-container');
+            html2canvas(previewBox, { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'agreement-thungkradas.jpg';
+                link.href = canvas.toDataURL('image/jpeg');
+                link.click();
+            });
+        }
+
+        function saveToDatabase(event) {
+            const button = event.target;
+            const originalText = button.innerText;
+            button.innerText = "กำลังบันทึก...";
+            
+            // รวมเนื้อหาทั้ง 4 พารากราฟคั่นด้วยบรรทัดใหม่
+            const allBodyText = [
+                document.getElementById('p1Text').value,
+                document.getElementById('p2Text').value,
+                document.getElementById('p3Text').value,
+                document.getElementById('p4Text').value
+            ].filter(text => text.trim() !== '').join('\n\n');
+
+            const data = {
+                title: document.getElementById('titleText').value,
+                body: allBodyText
+            };
+
+            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxo5F7gqCcite3dbdRJhLYnDtSWOb0JSPxARw9k4-cg4dyJH9d1-g0eZi1FoXHHOLtmkw/exec';
+
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                alert("บันทึกข้อมูลสำเร็จ!");
+                button.innerText = originalText;
+            })
+            .catch(error => {
+                alert("เกิดข้อผิดพลาดในการบันทึก");
+                button.innerText = originalText;
+            });
+        }
+        
+        updatePreview();
+    </script>
+
+</body>
+</html>
