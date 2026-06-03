@@ -3,36 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agreement Generator - thungkradas</title>
+    <title>Agreement Generator</title>
+    <!-- โหลดฟอนต์ Prompt และอื่นๆ -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&family=Sarabun:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        body { font-family: sans-serif; display: flex; gap: 20px; padding: 20px; background-color: #f4f4f4; }
-        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 50%; }
+        body { font-family: 'Prompt', sans-serif; display: flex; gap: 20px; padding: 20px; background-color: #f4f4f4; }
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 50%; height: fit-content;}
         h3 { margin-top: 0; }
-        label { display: block; margin-top: 10px; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        textarea { height: 150px; resize: vertical; }
-        button { margin-top: 20px; padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer; border-radius: 4px; }
+        label { display: block; margin-top: 10px; font-size: 14px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; font-family: 'Prompt', sans-serif; }
+        textarea { height: 100px; resize: vertical; }
+        button { margin-top: 20px; padding: 10px 20px; background: #333; color: white; border: none; cursor: pointer; border-radius: 4px; font-family: 'Prompt', sans-serif;}
         button:hover { background: #555; }
         
         /* ส่วนแสดงผล */
         #preview-container {
             padding: 40px;
-            background-color: #202020; /* สีพื้นหลังเริ่มต้นแบบรูป */
-            color: #ffffff;
+            background-color: #ffffff;
+            color: #000000;
             border-radius: 8px;
-            white-space: pre-wrap; /* ให้ขึ้นบรรทัดใหม่ตามที่พิมพ์ */
+            white-space: pre-wrap;
+            transition: all 0.3s;
         }
-        .tabs { margin-bottom: 20px; display: flex; gap: 10px; }
-        .tab { padding: 5px 10px; background: #333; border-radius: 4px; font-size: 14px; color: #aaa; cursor: pointer; }
-        .tab.active { background: #444; color: #fff; font-weight: bold; }
+        .tabs { margin-bottom: 20px; display: inline-block; }
+        .tab { padding: 5px 15px; background: #333; border-radius: 4px; font-size: 14px; color: #fff; font-weight: bold; }
+        
+        .divider { border-bottom: 1px solid #ccc; margin: 15px 0; display: none; }
+        .contact-box { margin-top: 20px; font-size: 12px; }
     </style>
 </head>
 <body>
 
+    <!-- หน้าตั้งค่า -->
     <div class="panel">
         <h3>⚙️ ตั้งค่าข้อตกลง</h3>
         
+        <label>ฟอนต์ข้อความ:</label>
+        <select id="fontFamily" onchange="updatePreview()">
+            <option value="'Prompt', sans-serif">Prompt</option>
+            <option value="'Sarabun', sans-serif">Sarabun</option>
+            <option value="sans-serif">System Default</option>
+        </select>
+
         <label>หัวข้อ (Tab):</label>
         <input type="text" id="tabText" value="สิทธิ์ส่วนตัว" oninput="updatePreview()">
 
@@ -40,28 +53,41 @@
         <input type="text" id="titleText" value="สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)" oninput="updatePreview()">
 
         <label>รายละเอียดข้อตกลง:</label>
-        <textarea id="bodyText" oninput="updatePreview()">ผู้ที่ได้รับข้อตกลงนี้ถือเป็นผู้ว่าจ้างของ thungkradas โดยมีข้อตกลงร่วมกันดังนี้...</textarea>
+        <textarea id="bodyText" oninput="updatePreview()">พิมพ์รายละเอียดที่นี่...</textarea>
 
-        <label>ขนาดตัวอักษร:</label>
-        <input type="range" id="fontSize" min="12" max="30" value="14" oninput="updatePreview()">
+        <label>ช่องทางติดต่อ:</label>
+        <textarea id="contactText" oninput="updatePreview()">ติดต่อ: thungkradas | Twitter: @... | Email: ...</textarea>
+
+        <label>ตัวเลือกตกแต่ง:</label>
+        <input type="checkbox" id="showDivider" style="width: auto;" onchange="updatePreview()"> <span style="font-size: 14px;">แสดงเส้นคั่นข้อความ</span><br>
+        <input type="checkbox" id="showBorder" style="width: auto;" onchange="updatePreview()"> <span style="font-size: 14px;">ใส่กรอบให้หน้าแสดงผล</span>
+
+        <label>ขนาดตัวอักษรเนื้อหา:</label>
+        <input type="range" id="fontSize" min="12" max="30" value="16" oninput="updatePreview()">
 
         <label>สีพื้นหลัง:</label>
-        <input type="color" id="bgColor" value="#202020" oninput="updatePreview()">
+        <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()">
 
         <label>สีตัวอักษร:</label>
-        <input type="color" id="textColor" value="#ffffff" oninput="updatePreview()">
+        <input type="color" id="textColor" value="#000000" oninput="updatePreview()">
+
+        <label>สีกล่องหัวข้อ (Tab):</label>
+        <input type="color" id="tabColor" value="#333333" oninput="updatePreview()">
 
         <button onclick="saveAsJPG()">💾 บันทึกเป็น JPG</button>
     </div>
 
+    <!-- หน้าแสดงผล -->
     <div class="panel">
         <h3>👀 แสดงผล</h3>
         <div id="preview-container">
             <div class="tabs">
-                <span class="tab active" id="previewTab">สิทธิ์ส่วนตัว</span>
+                <span class="tab" id="previewTab">สิทธิ์ส่วนตัว</span>
             </div>
-            <h2 id="previewTitle" style="margin-top: 0;">สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)</h2>
-            <div id="previewBody">ผู้ที่ได้รับข้อตกลงนี้ถือเป็นผู้ว่าจ้างของ thungkradas โดยมีข้อตกลงร่วมกันดังนี้...</div>
+            <h2 id="previewTitle" style="margin-top: 10px;">สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)</h2>
+            <div id="previewDivider" class="divider"></div>
+            <div id="previewBody">พิมพ์รายละเอียดที่นี่...</div>
+            <div id="previewContact" class="contact-box">ติดต่อ: thungkradas | Twitter: @... | Email: ...</div>
         </div>
     </div>
 
@@ -71,17 +97,31 @@
             document.getElementById('previewTab').innerText = document.getElementById('tabText').value;
             document.getElementById('previewTitle').innerText = document.getElementById('titleText').value;
             document.getElementById('previewBody').innerText = document.getElementById('bodyText').value;
+            document.getElementById('previewContact').innerText = document.getElementById('contactText').value;
             
-            // อัปเดตสไตล์
+            // อัปเดตสไตล์และฟอนต์
             const previewBox = document.getElementById('preview-container');
+            previewBox.style.fontFamily = document.getElementById('fontFamily').value;
             previewBox.style.fontSize = document.getElementById('fontSize').value + 'px';
             previewBox.style.backgroundColor = document.getElementById('bgColor').value;
             previewBox.style.color = document.getElementById('textColor').value;
+            
+            document.getElementById('previewTab').style.backgroundColor = document.getElementById('tabColor').value;
+            document.getElementById('previewTab').style.color = document.getElementById('bgColor').value; // ให้สีอักษร tab ตัดกับพื้นหลัง tab
+
+            // ตกแต่งเส้นคั่นและกรอบ
+            document.getElementById('previewDivider').style.display = document.getElementById('showDivider').checked ? 'block' : 'none';
+            document.getElementById('previewDivider').style.borderColor = document.getElementById('textColor').value;
+            
+            if (document.getElementById('showBorder').checked) {
+                previewBox.style.border = `2px solid ${document.getElementById('textColor').value}`;
+            } else {
+                previewBox.style.border = 'none';
+            }
         }
 
         function saveAsJPG() {
             const previewBox = document.getElementById('preview-container');
-            // ใช้ html2canvas แปลง div เป็น canvas
             html2canvas(previewBox, { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'agreement-thungkradas.jpg';
@@ -90,7 +130,6 @@
             });
         }
         
-        // รันครั้งแรกเพื่อเซ็ตค่า
         updatePreview();
     </script>
 
