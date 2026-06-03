@@ -87,7 +87,7 @@
         .btn-small { background: #3b82f6; }
         .btn-nav { background: #6b7280; padding: 8px 16px; font-size: 13px; }
         
-        /* วงกลมตั้งค่าระบบแบบธรรมดา */
+        /* วงกลมตั้งค่าระบบ */
         .btn-circle {
             background: #6b7280;
             width: 36px;
@@ -99,45 +99,74 @@
             justify-content: center;
             border: none;
             cursor: pointer;
-            color: white;
             flex-shrink: 0;
         }
         .btn-circle:hover { background: #4b5563; }
         .circle-icon {
-            width: 12px;
-            height: 12px;
+            width: 16px;
+            height: 16px;
             border: 2px solid white;
             border-radius: 50%;
         }
 
-        .para-box { border: 1px solid #e2e8f0; padding: 12px; margin-top: 10px; border-radius: 8px; background: #ffffff; }
-        .inline-controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 12px; flex-wrap: wrap; }
-        .inline-controls label { margin: 0; display: flex; align-items: center; gap: 5px; }
-        .inline-controls input[type="number"] { width: 50px; padding: 4px; text-align: center; }
-        .inline-controls input[type="color"] { width: 24px; height: 24px; padding: 0; border: none; cursor: pointer; }
+        /* --- กล่องพิมพ์แบบแก้ไขเฉพาะจุด (Rich Text Editor) --- */
+        .para-box { margin-top: 15px; }
+        .rich-editor {
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #fff;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .editor-toolbar {
+            background: #f3f4f6;
+            padding: 6px 10px;
+            border-bottom: 1px solid #d1d5db;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .toolbar-btn {
+            background: none; border: none; padding: 4px 8px; cursor: pointer; border-radius: 4px;
+            font-family: inherit; font-size: 14px; width: auto; color: #333;
+        }
+        .toolbar-btn:hover { background: #e5e7eb; }
+        .toolbar-select { padding: 4px; font-size: 12px; border-radius: 4px; border: 1px solid #ccc; }
+        .toolbar-color { width: 26px; height: 26px; padding: 0; border: none; cursor: pointer; border-radius: 4px; }
+        .editor-content {
+            padding: 12px;
+            min-height: 60px;
+            outline: none;
+            font-size: 14px;
+            background: #ffffff;
+            line-height: 1.4;
+        }
 
+        /* หน้ากระดาษพรีวิว */
         #preview-wrapper { width: 100%; display: flex; justify-content: center; }
         .preview-box { 
             background-color: #ffffff; color: #000000; padding: 50px; 
             width: 100%; max-width: 650px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            white-space: pre-wrap; text-align: left; line-height: 1.2; box-sizing: border-box;
+            white-space: pre-wrap; text-align: left; box-sizing: border-box;
+            line-height: 1.1; /* ลดช่องว่างบรรทัดโดยรวม */
         }
         
-        .tabs { margin-bottom: 25px; text-align: center; }
+        .tabs { margin-bottom: 20px; text-align: center; }
         .tab { padding: 6px 16px; background: #333; border-radius: 6px; font-size: 14px; color: #fff; font-weight: 700; display: inline-block; }
         .divider { border-bottom: 1px solid #ccc; margin: 15px 0; display: none; }
-        .contact-box { margin-top: 30px; font-size: 13px; text-align: left; }
-        .preview-para { margin-bottom: 2px; }
+        .contact-box { margin-top: 25px; font-size: 13px; text-align: left; }
+        
+        .preview-para { margin-bottom: 2px; } /* ลดระยะห่างระหว่างพารากราฟ */
+        .preview-para p { margin: 0; padding: 0; } /* กันแท็ก p อัตโนมัติสร้างช่องว่าง */
 
         .login-container { max-width: 350px; margin: 100px auto; text-align: center; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
-        /* การจัดวางบนมือถือ */
         @media (max-width: 768px) {
             body { display: block; height: auto; padding: 10px; }
             .page.active { display: block; height: auto; }
             .settings-panel { width: 100%; max-height: none; overflow-y: visible; padding-right: 0; }
             
-            /* จัดแถบเครื่องมือด้านบนให้อยู่ข้างกันในแนวนอน ไม่ขึ้นบรรทัดใหม่ */
             .mobile-flex-row {
                 display: flex !important;
                 flex-direction: row !important;
@@ -154,14 +183,7 @@
                 width: 100%; margin-top: 15px; padding: 15px 5px; 
                 border-radius: 12px; overflow-x: hidden;
             }
-            
-            /* หน้ากระดาษพอดีกับหน้าจอมือถือ */
-            .preview-box { 
-                padding: 25px 15px; 
-                width: 100%; 
-                max-width: 100%; 
-                box-shadow: none;
-            }
+            .preview-box { padding: 25px 15px; width: 100%; max-width: 100%; box-shadow: none; }
             .login-container { margin: 40px auto; }
         }
     </style>
@@ -170,14 +192,14 @@
 
     <div id="page-public" class="page active">
         <div class="preview-panel" style="border-radius: 12px;">
-            <div class="card mobile-flex-row" style="display: flex; gap: 10px; align-items: center; margin-bottom: 0; flex-wrap: wrap;">
+            <div class="card mobile-flex-row" style="display: flex; gap: 10px; align-items: center; margin-bottom: 0;">
                 <select id="publicSavedRecords" style="margin: 0; flex: 1; min-width: 120px;">
                     <option value="">-- เลือกข้อตกลง --</option>
                 </select>
                 <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('publicSavedRecords')">เลือกประเภทข้อตกลง</button>
                 <button class="btn-small" onclick="loadSelected('publicSavedRecords', 'public-container')">เปิดอ่าน</button>
-                <button class="btn-small" style="background: #10b981;" onclick="saveAsJPG('public-container')">เซฟ JPG</button>
-                <button class="btn-circle" onclick="switchPage('page-login')" title="ตั้งค่าระบบ"><div class="circle-icon"></div></button>
+                <button class="btn-small" style="background: #10b981;" onclick="saveAsJPG('public-container')">บันทึกรูปภาพ</button>
+                <button class="btn-circle" onclick="switchPage('page-login')"><div class="circle-icon"></div></button>
             </div>
             
             <div id="preview-wrapper">
@@ -212,7 +234,7 @@
                     <span>ดึงข้อมูลที่เคยบันทึก</span>
                     <button class="btn-nav" onclick="switchPage('page-public')" style="margin:0; padding:4px 10px;">ออกจากระบบ</button>
                 </div>
-                <div class="mobile-flex-row" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; width: 100%;">
+                <div class="mobile-flex-row" style="display: flex; gap: 10px; align-items: center;">
                     <select id="adminSavedRecords" style="margin: 0; flex: 1; min-width: 120px;">
                         <option value="">-- เลือกข้อตกลง --</option>
                     </select>
@@ -244,23 +266,36 @@
                     for(let i=1; i<=6; i++) {
                         document.write(`
                         <div class="para-box">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-size: 13px; font-weight: 700;">พารากราฟ ${i}</span>
                                 <label style="margin:0; font-size: 12px;"><input type="checkbox" id="p${i}Show" checked onchange="updatePreview()"> เปิดใช้</label>
                             </div>
-                            <textarea id="p${i}Text" oninput="updatePreview()"></textarea>
-                            <div class="inline-controls">
-                                <label><input type="checkbox" id="p${i}Bold" onchange="updatePreview()"> หนา</label>
-                                <label><input type="checkbox" id="p${i}Italic" onchange="updatePreview()"> เอียง</label>
-                                <label>ขนาด: <input type="number" id="p${i}Size" value="16" oninput="updatePreview()"></label>
-                                <label>สี: <input type="color" id="p${i}Color" value="#333333" oninput="updatePreview()"></label>
+                            
+                            <div class="rich-editor">
+                                <div class="editor-toolbar">
+                                    <button type="button" class="toolbar-btn" onmousedown="event.preventDefault(); formatDoc('bold')" style="font-weight:bold;">B</button>
+                                    <button type="button" class="toolbar-btn" onmousedown="event.preventDefault(); formatDoc('italic')" style="font-style:italic;">/</button>
+                                    <button type="button" class="toolbar-btn" onmousedown="event.preventDefault(); formatDoc('underline')" style="text-decoration:underline;">U</button>
+                                    <button type="button" class="toolbar-btn" onmousedown="event.preventDefault(); formatDoc('strikeThrough')" style="text-decoration:line-through;">S</button>
+                                    <select class="toolbar-select" onchange="formatDoc('fontSize', this.value); this.selectedIndex=0;" onmousedown="event.preventDefault();">
+                                        <option value="">ขนาด</option>
+                                        <option value="2">เล็ก</option>
+                                        <option value="3">ปกติ</option>
+                                        <option value="4">ใหญ่</option>
+                                        <option value="5">ใหญ่มาก</option>
+                                    </select>
+                                    <input type="color" class="toolbar-color" onchange="formatDoc('foreColor', this.value)">
+                                </div>
+                                <div class="editor-content" id="p${i}Text" contenteditable="true" oninput="updatePreview()"></div>
                             </div>
                         </div>
                         `);
                     }
                 </script>
-                <label>ช่องทางติดต่อ (ล่างสุด):</label>
-                <textarea id="contactText" oninput="updatePreview()">ติดต่อ: thungkradas</textarea>
+
+                <label style="margin-top: 15px;">ช่องทางติดต่อ (ล่างสุด):</label>
+                <textarea id="contactText" oninput="updatePreview()" style="height: 50px;">ติดต่อ: thungkradas</textarea>
+                
                 <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; margin-top:15px; cursor:pointer;">
                     <input type="checkbox" id="showDivider" onchange="updatePreview()"> แสดงเส้นคั่นก่อนเนื้อหา
                 </label>
@@ -270,16 +305,16 @@
             </div>
 
             <div class="card">
-                <button class="btn-jpg" onclick="saveAsJPG('admin-container')">บันทึกเป็นรูป JPG</button>
+                <button class="btn-jpg" onclick="saveAsJPG('admin-container')">บันทึกรูปภาพ</button>
                 <button class="btn-save" onclick="saveToDatabase(event)">บันทึกข้อมูลเข้าระบบ</button>
             </div>
 
             <details style="margin-top: 10px; font-size: 13px;">
-                <summary style="cursor: pointer; color: #888; text-align: center; list-style: none;">ตั้งค่ารหัสผ่าน</summary>
+                <summary style="cursor: pointer; color: #888; text-align: center; list-style: none;">ตั้งค่ารหัสผ่านระบบ</summary>
                 <div class="card" style="margin-top: 10px; border: 1px solid #e2e8f0;">
                     <label>รหัสผ่านใหม่:</label>
                     <input type="password" id="newPasswordInput" placeholder="กรอกรหัสผ่านใหม่ที่นี่">
-                    <button class="btn-small" style="background: #ef4444; width: 100%; margin-top: 12px;" onclick="changePassword()">บันทึกรหัสผ่านใหม่</button>
+                    <button class="btn-small" style="background: #ef4444; width: 100%; margin-top: 12px;" onclick="changePassword()">บันทึกรหัสผ่าน</button>
                 </div>
             </details>
         </div>
@@ -305,7 +340,11 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzmvcY8zJdovMKm6HwMCc3ADDW96MnadEtX67HDzY-FSf39fBmeLUkebIdCyh2BR7xALQ/exec';
         let fetchedData = [];
 
-        document.getElementById('p1Text').value = "ข้อตกลง...";
+        // คำสั่งสำหรับ Editor เลือกไฮไลท์ข้อความ
+        function formatDoc(cmd, value = null) {
+            document.execCommand(cmd, false, value);
+            updatePreview();
+        }
 
         function switchPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -335,7 +374,7 @@
                 return;
             }
             localStorage.setItem('adminPassword', newPass);
-            alert('เปลี่ยนรหัสผ่านใหม่สำเร็จแล้วจ้ะ!');
+            alert('เปลี่ยนรหัสผ่านใหม่เรียบร้อยแล้วครับ');
             document.getElementById('newPasswordInput').value = '';
         }
 
@@ -360,23 +399,25 @@
             if (index === "") return;
             const item = fetchedData[index];
             
+            // แยกด้วย ||||| ตามที่ตั้งไว้เพื่อรักษาความสมบูรณ์ของ HTML หรือ \n\n สำหรับข้อมูลเก่า
+            const paras = item.body.includes('|||||') ? item.body.split('|||||') : item.body.split('\n\n');
+            
             if (containerId === 'admin-container') {
                 document.getElementById('tabText').value = item.title;
-                const paras = item.body.split('\n\n');
                 for(let i=1; i<=6; i++) {
-                    document.getElementById(`p${i}Text`).value = paras[i-1] || '';
-                    document.getElementById(`p${i}Show`).checked = !!paras[i-1];
+                    const content = paras[i-1] || '';
+                    document.getElementById(`p${i}Text`).innerHTML = content;
+                    document.getElementById(`p${i}Show`).checked = !!content;
                 }
                 updatePreview();
             } else {
                 const prefix = 'public';
                 const box = document.getElementById(containerId);
                 document.getElementById(`${prefix}Tab`).innerText = item.title;
-                const paras = item.body.split('\n\n');
                 for(let i=1; i<=6; i++) {
                     const el = document.getElementById(`${prefix}P${i}`);
                     if (paras[i-1]) {
-                        el.innerText = paras[i-1];
+                        el.innerHTML = paras[i-1];
                         el.style.display = 'block';
                     } else { el.style.display = 'none'; }
                 }
@@ -402,13 +443,10 @@
             for(let i=1; i<=6; i++) {
                 const el = document.getElementById(`${prefix}P${i}`);
                 const isShow = document.getElementById(`p${i}Show`).checked;
-                const text = document.getElementById(`p${i}Text`).value;
-                if (isShow && text.trim() !== '') {
-                    el.innerText = text;
-                    el.style.fontWeight = document.getElementById(`p${i}Bold`).checked ? 'bold' : 'normal';
-                    el.style.fontStyle = document.getElementById(`p${i}Italic`).checked ? 'italic' : 'normal';
-                    el.style.fontSize = document.getElementById(`p${i}Size`).value + 'px';
-                    el.style.color = document.getElementById(`p${i}Color`).value;
+                const htmlContent = document.getElementById(`p${i}Text`).innerHTML;
+                
+                if (isShow && htmlContent.trim() !== '' && htmlContent !== '<br>') {
+                    el.innerHTML = htmlContent;
                     el.style.display = 'block';
                 } else { el.style.display = 'none'; }
             }
@@ -443,11 +481,12 @@
             button.innerText = "กำลังบันทึก...";
             let activeParas = [];
             for(let i=1; i<=6; i++) {
-                if(document.getElementById(`p${i}Show`).checked && document.getElementById(`p${i}Text`).value.trim() !== '') {
-                    activeParas.push(document.getElementById(`p${i}Text`).value);
+                if(document.getElementById(`p${i}Show`).checked && document.getElementById(`p${i}Text`).innerHTML.trim() !== '') {
+                    activeParas.push(document.getElementById(`p${i}Text`).innerHTML);
                 }
             }
-            const data = { title: document.getElementById('tabText').value, body: activeParas.join('\n\n') };
+            // ใช้ ||||| แบ่งข้อมูลเพื่อไม่ให้ HTML พังเวลาโหลดกลับมา
+            const data = { title: document.getElementById('tabText').value, body: activeParas.join('|||||') };
 
             fetch(WEB_APP_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
             .then(() => {
