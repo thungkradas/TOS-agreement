@@ -86,6 +86,24 @@
         .btn-save:hover { background: #059669; }
         .btn-small { background: #3b82f6; }
         .btn-nav { background: #6b7280; padding: 8px 16px; font-size: 13px; }
+        
+        /* ปุ่มไอคอนวงกลมเล็ก ๆ */
+        .btn-circle {
+            background: #6b7280;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: white;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        .btn-circle:hover { background: #4b5563; }
 
         .para-box { border: 1px solid #e2e8f0; padding: 12px; margin-top: 10px; border-radius: 8px; background: #ffffff; }
         .inline-controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 12px; flex-wrap: wrap; }
@@ -108,13 +126,16 @@
 
         .login-container { max-width: 350px; margin: 100px auto; text-align: center; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
-        /* แก้ไขระบบให้รองรับมือถือ */
         @media (max-width: 768px) {
             body { display: block; height: auto; padding: 10px; }
             .page.active { display: block; height: auto; }
             .settings-panel { width: 100%; max-height: none; overflow-y: visible; padding-right: 0; }
-            .preview-panel { width: 100%; margin-top: 20px; padding: 20px 10px; border-radius: 12px; }
-            .preview-box { padding: 20px; max-width: 100%; }
+            .preview-panel { 
+                width: 100%; margin-top: 20px; padding: 20px 10px; 
+                border-radius: 12px; overflow-x: auto; align-items: flex-start;
+            }
+            #preview-wrapper { width: auto; display: block; }
+            .preview-box { padding: 40px 25px; width: 550px; max-width: 550px; }
             .login-container { margin: 40px auto; }
         }
     </style>
@@ -125,18 +146,19 @@
         <div class="preview-panel" style="border-radius: 12px;">
             <div class="card" style="display: flex; gap: 10px; align-items: center; margin-bottom: 0; flex-wrap: wrap;">
                 <select id="publicSavedRecords" style="margin: 0; flex: 1; min-width: 150px;">
-                    <option value="">-- รอโหลดข้อมูล --</option>
+                    <option value="">-- เลือกข้อตกลง --</option>
                 </select>
-                <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('publicSavedRecords')">โหลดชื่อ</button>
+                <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('publicSavedRecords')">เลือกประเภทข้อตกลง</button>
                 <button class="btn-small" onclick="loadSelected('publicSavedRecords', 'public-container')">เปิดอ่าน</button>
-                <button class="btn-nav" onclick="switchPage('page-login')">ตั้งค่าระบบ</button>
+                <button class="btn-small" style="background: #10b981;" onclick="saveAsJPG('public-container')">💾 เซฟ JPG</button>
+                <button class="btn-circle" onclick="switchPage('page-login')" title="ตั้งค่าระบบ">⚙️</button>
             </div>
             
             <div id="preview-wrapper">
                 <div id="public-container" class="preview-box">
                     <div class="tabs"><span class="tab" id="publicTab">ข้อตกลง</span></div>
                     <div id="publicDivider" class="divider"></div>
-                    <div id="publicP1" class="preview-para">กรุณากดโหลดชื่อและเลือกข้อตกลงที่ต้องการดู</div>
+                    <div id="publicP1" class="preview-para">กรุณากดเลือกประเภทข้อตกลงและเลือกรายการที่ต้องการดู</div>
                     <div id="publicP2" class="preview-para"></div>
                     <div id="publicP3" class="preview-para"></div>
                     <div id="publicP4" class="preview-para"></div>
@@ -166,18 +188,11 @@
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                     <select id="adminSavedRecords" style="margin: 0; flex: 1; min-width: 150px;">
-                        <option value="">-- รอโหลดข้อมูล --</option>
+                        <option value="">-- เลือกข้อตกลง --</option>
                     </select>
-                    <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('adminSavedRecords')">โหลดชื่อ</button>
+                    <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('adminSavedRecords')">เลือกประเภทข้อตกลง</button>
                     <button class="btn-small" onclick="loadSelected('adminSavedRecords', 'admin-container')">เปิดอ่าน</button>
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">เปลี่ยนรหัสผ่านระบบ</div>
-                <label>รหัสผ่านใหม่:</label>
-                <input type="password" id="newPasswordInput" placeholder="กรอกรหัสผ่านใหม่ที่นี่">
-                <button class="btn-small" style="background: #ef4444; width: 100%; margin-top: 12px;" onclick="changePassword()">บันทึกรหัสผ่านใหม่</button>
             </div>
 
             <div class="card">
@@ -229,9 +244,18 @@
             </div>
 
             <div class="card">
-                <button class="btn-jpg" onclick="saveAsJPG()">บันทึกเป็นรูป JPG</button>
+                <button class="btn-jpg" onclick="saveAsJPG('admin-container')">บันทึกเป็นรูป JPG</button>
                 <button class="btn-save" onclick="saveToDatabase(event)">บันทึกข้อมูลเข้าระบบ</button>
             </div>
+
+            <details style="margin-top: 10px; font-size: 13px;">
+                <summary style="cursor: pointer; color: #888; text-align: center; list-style: none;">⚙️ ตั้งค่ารหัสผ่าน</summary>
+                <div class="card" style="margin-top: 10px; border: 1px solid #e2e8f0;">
+                    <label>รหัสผ่านใหม่:</label>
+                    <input type="password" id="newPasswordInput" placeholder="กรอกรหัสผ่านใหม่ที่นี่">
+                    <button class="btn-small" style="background: #ef4444; width: 100%; margin-top: 12px;" onclick="changePassword()">บันทึกรหัสผ่านใหม่</button>
+                </div>
+            </details>
         </div>
 
         <div class="preview-panel">
@@ -377,8 +401,9 @@
             }
         }
 
-        function saveAsJPG() {
-            const previewBox = document.getElementById('admin-container');
+        function saveAsJPG(containerId) {
+            const targetId = containerId || 'admin-container';
+            const previewBox = document.getElementById(targetId);
             html2canvas(previewBox, { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'agreement-thungkradas.jpg';
