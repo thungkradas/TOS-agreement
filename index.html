@@ -12,19 +12,18 @@
             margin: 0; 
             padding: 20px; 
             background-color: #f3f4f6; 
-            display: flex; 
-            gap: 20px; 
             height: 100vh; 
             box-sizing: border-box;
             color: #333;
         }
 
-        /* ซ่อน Scrollbar แต่ยังเลื่อนได้ */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
-        /* เลย์เอาต์หลัก */
+        .page { display: none; gap: 20px; height: calc(100vh - 40px); }
+        .page.active { display: flex; }
+
         .settings-panel {
             width: 420px;
             overflow-y: auto;
@@ -41,16 +40,19 @@
             padding: 40px 20px;
             overflow-y: auto;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
         }
 
-        /* การ์ดในฝั่งตั้งค่า */
         .card {
             background: #ffffff;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .card-title {
@@ -61,165 +63,177 @@
             border-bottom: 1px solid #f0f0f0;
         }
 
-        /* ฟอร์มและปุ่ม */
         label { display: block; margin-top: 12px; font-size: 13px; font-weight: 500; color: #555; }
-        input[type="text"], select, textarea { 
+        input[type="text"], input[type="password"], select, textarea { 
             width: 100%; padding: 10px; margin-top: 5px; 
             box-sizing: border-box; font-family: 'Prompt', sans-serif; 
             border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px;
-            background: #f8fafc; transition: border 0.2s;
+            background: #f8fafc;
         }
-        input[type="text"]:focus, select:focus, textarea:focus { border-color: #a0aec0; outline: none; }
         textarea { height: 70px; resize: vertical; }
         
         button { 
             padding: 12px 20px; color: white; border: none; cursor: pointer; 
             border-radius: 8px; font-family: 'Prompt', sans-serif; 
-            width: 100%; font-weight: 500; font-size: 14px; transition: 0.2s;
+            font-weight: 500; font-size: 14px; transition: 0.2s;
         }
-        .btn-jpg { background: #1f2937; margin-bottom: 10px; }
+        .btn-jpg { background: #1f2937; width: 100%; margin-bottom: 10px; }
         .btn-jpg:hover { background: #374151; }
-        .btn-save { background: #10b981; }
+        .btn-save { background: #10b981; width: 100%; }
         .btn-save:hover { background: #059669; }
-        .btn-small { width: auto; margin: 0; padding: 8px 12px; font-size: 13px; border-radius: 6px; }
+        .btn-small { background: #3b82f6; }
+        .btn-nav { background: #6b7280; padding: 8px 16px; font-size: 13px; }
 
-        /* พารากราฟ */
-        .para-box { 
-            border: 1px solid #e2e8f0; padding: 12px; margin-top: 10px; 
-            border-radius: 8px; background: #ffffff; 
-        }
-        .inline-controls { 
-            display: flex; align-items: center; gap: 10px; 
-            margin-top: 10px; font-size: 12px; flex-wrap: wrap; 
-        }
-        .inline-controls label { margin: 0; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .inline-controls input[type="number"] { width: 50px; padding: 4px; border: 1px solid #ddd; border-radius: 4px; text-align: center; }
-        .inline-controls input[type="color"] { width: 24px; height: 24px; padding: 0; border: none; cursor: pointer; border-radius: 4px; }
+        .para-box { border: 1px solid #e2e8f0; padding: 12px; margin-top: 10px; border-radius: 8px; background: #ffffff; }
+        .inline-controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 12px; flex-wrap: wrap; }
+        .inline-controls label { margin: 0; display: flex; align-items: center; gap: 5px; }
+        .inline-controls input[type="number"] { width: 50px; padding: 4px; text-align: center; }
+        .inline-controls input[type="color"] { width: 24px; height: 24px; padding: 0; border: none; cursor: pointer; }
 
-        /* ส่วนแสดงผล (กระดาษ) */
         #preview-wrapper { width: 100%; display: flex; justify-content: center; }
-        
-        #preview-container { 
-            background-color: #ffffff; 
-            color: #000000; 
-            border-radius: 0; /* ทำให้เหมือนกระดาษ */
-            padding: 50px; 
-            width: 100%;
-            max-width: 650px; /* ขนาดจำลอง A4 */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            white-space: pre-wrap; 
-            text-align: left; 
-            line-height: 1.2; /* ลดช่องว่างบรรทัด */
-            box-sizing: border-box;
+        .preview-box { 
+            background-color: #ffffff; color: #000000; padding: 50px; 
+            width: 100%; max-width: 650px; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            white-space: pre-wrap; text-align: left; line-height: 1.2; box-sizing: border-box;
         }
         
-        .tabs { margin-bottom: 25px; text-align: left; }
-        .tab { 
-            padding: 6px 16px; background: #333; border-radius: 6px; 
-            font-size: 14px; color: #fff; font-weight: 700; display: inline-block; 
-        }
+        .tabs { margin-bottom: 25px; text-align: center; }
+        .tab { padding: 6px 16px; background: #333; border-radius: 6px; font-size: 14px; color: #fff; font-weight: 700; display: inline-block; }
         .divider { border-bottom: 1px solid #ccc; margin: 15px 0; display: none; }
         .contact-box { margin-top: 30px; font-size: 13px; text-align: left; }
-        .preview-para { margin-bottom: 2px; } /* ลดระยะห่างระหว่างพารากราฟ */
+        .preview-para { margin-bottom: 2px; }
+
+        .login-container { max-width: 350px; margin: 100px auto; text-align: center; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     </style>
 </head>
 <body>
 
-    <div class="settings-panel">
-        
-        <div class="card">
-            <div class="card-title">ดึงข้อมูลที่เคยบันทึก</div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <select id="savedRecords" style="margin: 0; flex: 1;">
+    <div id="page-public" class="page active">
+        <div class="preview-panel" style="border-radius: 12px;">
+            <div class="card" style="display: flex; gap: 10px; align-items: center; margin-bottom: 0;">
+                <select id="publicSavedRecords" style="margin: 0; flex: 1;">
                     <option value="">-- รอโหลดข้อมูล --</option>
                 </select>
-                <button class="btn-small" style="background: #f59e0b; color: white;" onclick="fetchData()">โหลดชื่อ</button>
-                <button class="btn-small" style="background: #3b82f6; color: white;" onclick="loadSelected()">เปิดอ่าน</button>
+                <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('publicSavedRecords')">โหลดชื่อ</button>
+                <button class="btn-small" onclick="loadSelected('publicSavedRecords', 'public-container')">เปิดอ่าน</button>
+                <button class="btn-nav" onclick="switchPage('page-login')">ตั้งค่าระบบ</button>
+            </div>
+            
+            <div id="preview-wrapper">
+                <div id="public-container" class="preview-box">
+                    <div class="tabs"><span class="tab" id="publicTab">ข้อตกลง</span></div>
+                    <div id="publicDivider" class="divider"></div>
+                    <div id="publicP1" class="preview-para">กรุณากดโหลดชื่อและเลือกข้อตกลงที่ต้องการดู</div>
+                    <div id="publicP2" class="preview-para"></div>
+                    <div id="publicP3" class="preview-para"></div>
+                    <div id="publicP4" class="preview-para"></div>
+                    <div id="publicP5" class="preview-para"></div>
+                    <div id="publicP6" class="preview-para"></div>
+                    <div id="publicContact" class="contact-box"></div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="card">
-            <div class="card-title">ตั้งค่าทั่วไป</div>
-            <label>ฟอนต์หลัก:</label>
-            <select id="fontFamily" onchange="updatePreview()">
-                <option value="'Prompt', sans-serif">Prompt</option>
-                <option value="'Sarabun', sans-serif">Sarabun</option>
-                <option value="sans-serif">System Default</option>
-            </select>
+    <div id="page-login" class="page">
+        <div class="login-container">
+            <h3 style="margin-top:0;">เข้าสู่ระบบตั้งค่า</h3>
+            <input type="password" id="passwordInput" placeholder="กรอกรหัสผ่าน">
+            <button class="btn-small" style="width:100%; margin-top:15px; background:#1f2937;" onclick="checkPassword()">ตกลง</button>
+            <button class="btn-nav" style="width:100%; margin-top:10px;" onclick="switchPage('page-public')">กลับหน้าหลัก</button>
+        </div>
+    </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <div style="flex: 1;">
-                    <label style="margin-top:0;">สีพื้นหลังหน้ากระดาษ:</label>
-                    <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()" style="width:100%; height: 35px; border:none; padding:0;">
+    <div id="page-admin" class="page">
+        <div class="settings-panel">
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center;" class="card-title">
+                    <span>ดึงข้อมูลที่เคยบันทึก</span>
+                    <button class="btn-nav" onclick="switchPage('page-public')" style="margin:0; padding:4px 10px;">ออกจากระบบ</button>
+                </div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <select id="adminSavedRecords" style="margin: 0; flex: 1;">
+                        <option value="">-- รอโหลดข้อมูล --</option>
+                    </select>
+                    <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('adminSavedRecords')">โหลดชื่อ</button>
+                    <button class="btn-small" onclick="loadSelected('adminSavedRecords', 'admin-container')">เปิดอ่าน</button>
                 </div>
             </div>
 
-            <label>หัวข้อ (Tab):</label>
-            <div style="display: flex; gap: 10px; align-items: center;">
-                <input type="text" id="tabText" value="สิทธิ์ส่วนตัว" oninput="updatePreview()">
-                <input type="color" id="tabColor" value="#333333" oninput="updatePreview()" title="สีป้าย Tab" style="width: 40px; height: 38px; padding:0; border:none;">
+            <div class="card">
+                <div class="card-title">เปลี่ยนรหัสผ่านระบบ</div>
+                <label>รหัสผ่านใหม่:</label>
+                <input type="password" id="newPasswordInput" placeholder="กรอกรหัสผ่านใหม่ที่นี่">
+                <button class="btn-small" style="background: #ef4444; width: 100%; margin-top: 12px;" onclick="changePassword()">บันทึกรหัสผ่านใหม่</button>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="card-title">รายละเอียดข้อตกลง</div>
-            
-            <script>
-                // ใช้ Script สร้างกล่องพารากราฟ 1-6 เพื่อลดความยาวโค้ด
-                for(let i=1; i<=6; i++) {
-                    document.write(`
-                    <div class="para-box">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <span style="font-size: 13px; font-weight: 700;">พารากราฟ ${i}</span>
-                            <label style="margin:0; font-size: 12px;"><input type="checkbox" id="p${i}Show" checked onchange="updatePreview()"> เปิดใช้</label>
-                        </div>
-                        <textarea id="p${i}Text" oninput="updatePreview()"></textarea>
-                        <div class="inline-controls">
-                            <label><input type="checkbox" id="p${i}Bold" onchange="updatePreview()"> หนา</label>
-                            <label><input type="checkbox" id="p${i}Italic" onchange="updatePreview()"> เอียง</label>
-                            <label>ขนาด: <input type="number" id="p${i}Size" value="16" oninput="updatePreview()"></label>
-                            <label>สี: <input type="color" id="p${i}Color" value="#333333" oninput="updatePreview()"></label>
-                        </div>
-                    </div>
-                    `);
-                }
-            </script>
-            
-            <label>ช่องทางติดต่อ (ล่างสุด):</label>
-            <textarea id="contactText" oninput="updatePreview()">ติดต่อ: thungkradas</textarea>
+            <div class="card">
+                <div class="card-title">ตั้งค่าทั่วไป</div>
+                <label>ฟอนต์หลัก:</label>
+                <select id="fontFamily" onchange="updatePreview()">
+                    <option value="'Prompt', sans-serif">Prompt</option>
+                    <option value="'Sarabun', sans-serif">Sarabun</option>
+                    <option value="sans-serif">System Default</option>
+                </select>
+                <label>สีพื้นหลังหน้ากระดาษ:</label>
+                <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()" style="height:35px; border:none; padding:0;">
+                <label>หัวข้อ (Tab):</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="tabText" value="สิทธิ์ส่วนตัว" oninput="updatePreview()">
+                    <input type="color" id="tabColor" value="#333333" oninput="updatePreview()" style="width:40px; height:38px; padding:0; border:none;">
+                </div>
+            </div>
 
-            <div style="margin-top: 15px; font-size: 13px;">
-                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal;">
+            <div class="card">
+                <div class="card-title">รายละเอียดข้อตกลง</div>
+                <script>
+                    for(let i=1; i<=6; i++) {
+                        document.write(`
+                        <div class="para-box">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-size: 13px; font-weight: 700;">พารากราฟ ${i}</span>
+                                <label style="margin:0; font-size: 12px;"><input type="checkbox" id="p${i}Show" checked onchange="updatePreview()"> เปิดใช้</label>
+                            </div>
+                            <textarea id="p${i}Text" oninput="updatePreview()"></textarea>
+                            <div class="inline-controls">
+                                <label><input type="checkbox" id="p${i}Bold" onchange="updatePreview()"> หนา</label>
+                                <label><input type="checkbox" id="p${i}Italic" onchange="updatePreview()"> เอียง</label>
+                                <label>ขนาด: <input type="number" id="p${i}Size" value="16" oninput="updatePreview()"></label>
+                                <label>สี: <input type="color" id="p${i}Color" value="#333333" oninput="updatePreview()"></label>
+                            </div>
+                        </div>
+                        `);
+                    }
+                </script>
+                <label>ช่องทางติดต่อ (ล่างสุด):</label>
+                <textarea id="contactText" oninput="updatePreview()">ติดต่อ: thungkradas</textarea>
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; margin-top:15px;">
                     <input type="checkbox" id="showDivider" onchange="updatePreview()"> แสดงเส้นคั่นก่อนเนื้อหา
                 </label>
                 <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; margin-top: 5px;">
                     <input type="checkbox" id="showBorder" onchange="updatePreview()"> ใส่กรอบรอบกระดาษ
                 </label>
             </div>
+
+            <div class="card">
+                <button class="btn-jpg" onclick="saveAsJPG()">บันทึกเป็นรูป JPG</button>
+                <button class="btn-save" onclick="saveToDatabase(event)">บันทึกข้อมูลเข้าระบบ</button>
+            </div>
         </div>
 
-        <div class="card">
-            <button class="btn-jpg" onclick="saveAsJPG()">บันทึกเป็นรูป JPG</button>
-            <button class="btn-save" onclick="saveToDatabase(event)">บันทึกข้อมูลเข้าระบบ</button>
-        </div>
-    </div>
-
-    <div class="preview-panel">
-        <div id="preview-wrapper">
-            <div id="preview-container">
-                <div class="tabs">
-                    <span class="tab" id="previewTab">สิทธิ์ส่วนตัว</span>
+        <div class="preview-panel">
+            <div id="preview-wrapper">
+                <div id="admin-container" class="preview-box">
+                    <div class="tabs"><span class="tab" id="adminTab">สิทธิ์ส่วนตัว</span></div>
+                    <div id="adminDivider" class="divider"></div>
+                    <div id="adminP1" class="preview-para"></div>
+                    <div id="adminP2" class="preview-para"></div>
+                    <div id="adminP3" class="preview-para"></div>
+                    <div id="adminP4" class="preview-para"></div>
+                    <div id="adminP5" class="preview-para"></div>
+                    <div id="adminP6" class="preview-para"></div>
+                    <div id="adminContact" class="contact-box"></div>
                 </div>
-                <div id="previewDivider" class="divider"></div>
-                
-                <div id="previewP1" class="preview-para"></div>
-                <div id="previewP2" class="preview-para"></div>
-                <div id="previewP3" class="preview-para"></div>
-                <div id="previewP4" class="preview-para"></div>
-                <div id="previewP5" class="preview-para"></div>
-                <div id="previewP6" class="preview-para"></div>
-
-                <div id="previewContact" class="contact-box"></div>
             </div>
         </div>
     </div>
@@ -228,84 +242,118 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzmvcY8zJdovMKm6HwMCc3ADDW96MnadEtX67HDzY-FSf39fBmeLUkebIdCyh2BR7xALQ/exec';
         let fetchedData = [];
 
-        // ใส่ข้อความเริ่มต้นให้พารากราฟ 1 ตอนเปิดเว็บ
         document.getElementById('p1Text').value = "ข้อตกลง...";
 
-        function fetchData() {
-            const select = document.getElementById('savedRecords');
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('passwordInput').value = '';
+        }
+
+        // ดึงรหัสผ่านปัจจุบันจากระบบจำข้อมูล
+        function getActivePassword() {
+            return localStorage.getItem('adminPassword') || '1212312121';
+        }
+
+        function checkPassword() {
+            const pass = document.getElementById('passwordInput').value;
+            if (pass === getActivePassword()) {
+                switchPage('page-admin');
+                updatePreview();
+            } else {
+                alert('รหัสผ่านไม่ถูกต้อง');
+            }
+        }
+
+        function changePassword() {
+            const newPass = document.getElementById('newPasswordInput').value;
+            if (newPass.trim() === '') {
+                alert('กรุณากรอกรหัสผ่านใหม่');
+                return;
+            }
+            localStorage.setItem('adminPassword', newPass);
+            alert('เปลี่ยนรหัสผ่านใหม่สำเร็จแล้วจ้ะ!');
+            document.getElementById('newPasswordInput').value = '';
+        }
+
+        function fetchData(selectId) {
+            const select = document.getElementById(selectId);
             select.innerHTML = '<option>กำลังโหลด...</option>';
-            
             fetch(WEB_APP_URL)
-            .then(response => response.json())
+            .then(res => res.json())
             .then(data => {
                 fetchedData = data;
-                select.innerHTML = '<option value="">-- เลือกข้อตกลง --</option>';
-                data.forEach((item, index) => {
-                    select.innerHTML += `<option value="${index}">${item.title}</option>`;
+                document.querySelectorAll('#publicSavedRecords, #adminSavedRecords').forEach(sel => {
+                    sel.innerHTML = '<option value="">-- เลือกข้อตกลง --</option>';
+                    data.forEach((item, index) => {
+                        sel.innerHTML += `<option value="${index}">${item.title}</option>`;
+                    });
                 });
-            })
-            .catch(() => {
-                select.innerHTML = '<option value="">โหลดไม่สำเร็จ</option>';
-            });
+            }).catch(() => { select.innerHTML = '<option value="">โหลดไม่สำเร็จ</option>'; });
         }
 
-        function loadSelected() {
-            const index = document.getElementById('savedRecords').value;
+        function loadSelected(selectId, containerId) {
+            const index = document.getElementById(selectId).value;
             if (index === "") return;
-            
             const item = fetchedData[index];
-            document.getElementById('tabText').value = item.title;
             
-            const paras = item.body.split('\n\n');
-            for(let i=1; i<=6; i++) {
-                const elText = document.getElementById(`p${i}Text`);
-                const elShow = document.getElementById(`p${i}Show`);
-                if (paras[i-1]) {
-                    elText.value = paras[i-1];
-                    elShow.checked = true;
-                } else {
-                    elText.value = '';
-                    elShow.checked = false;
+            if (containerId === 'admin-container') {
+                document.getElementById('tabText').value = item.title;
+                const paras = item.body.split('\n\n');
+                for(let i=1; i<=6; i++) {
+                    document.getElementById(`p${i}Text`).value = paras[i-1] || '';
+                    document.getElementById(`p${i}Show`).checked = !!paras[i-1];
                 }
-            }
-            updatePreview();
-        }
-
-        function applyStyle(num) {
-            const el = document.getElementById(`previewP${num}`);
-            const isShow = document.getElementById(`p${num}Show`).checked;
-            const text = document.getElementById(`p${num}Text`).value;
-            
-            if (isShow && text.trim() !== '') {
-                el.innerText = text;
-                el.style.fontWeight = document.getElementById(`p${num}Bold`).checked ? 'bold' : 'normal';
-                el.style.fontStyle = document.getElementById(`p${num}Italic`).checked ? 'italic' : 'normal';
-                el.style.fontSize = document.getElementById(`p${num}Size`).value + 'px';
-                el.style.color = document.getElementById(`p${num}Color`).value;
-                el.style.display = 'block';
+                updatePreview();
             } else {
-                el.style.display = 'none';
+                const prefix = 'public';
+                const box = document.getElementById(containerId);
+                document.getElementById(`${prefix}Tab`).innerText = item.title;
+                const paras = item.body.split('\n\n');
+                for(let i=1; i<=6; i++) {
+                    const el = document.getElementById(`${prefix}P${i}`);
+                    if (paras[i-1]) {
+                        el.innerText = paras[i-1];
+                        el.style.display = 'block';
+                    } else { el.style.display = 'none'; }
+                }
+                box.style.fontFamily = document.getElementById('fontFamily').value;
+                box.style.backgroundColor = document.getElementById('bgColor').value;
+                document.getElementById(`${prefix}Tab`).style.backgroundColor = document.getElementById('tabColor').value;
+                document.getElementById(`${prefix}Tab`).style.color = document.getElementById('bgColor').value;
+                document.getElementById(`${prefix}Contact`).innerText = document.getElementById('contactText').value;
+                document.getElementById(`${prefix}Contact`).style.color = document.getElementById('tabColor').value;
             }
         }
 
         function updatePreview() {
-            const previewBox = document.getElementById('preview-container');
+            const prefix = 'admin';
+            const previewBox = document.getElementById(`${prefix}-container`);
             previewBox.style.fontFamily = document.getElementById('fontFamily').value;
             previewBox.style.backgroundColor = document.getElementById('bgColor').value;
 
-            document.getElementById('previewTab').innerText = document.getElementById('tabText').value;
-            document.getElementById('previewTab').style.backgroundColor = document.getElementById('tabColor').value;
-            // ให้ตัวหนังสือป้าย Tab เป็นสีเดียวกับพื้นหลังกระดาษ จะได้อ่านง่าย
-            document.getElementById('previewTab').style.color = document.getElementById('bgColor').value;
+            document.getElementById(`${prefix}Tab`).innerText = document.getElementById('tabText').value;
+            document.getElementById(`${prefix}Tab`).style.backgroundColor = document.getElementById('tabColor').value;
+            document.getElementById(`${prefix}Tab`).style.color = document.getElementById('bgColor').value;
             
-            for(let i=1; i<=6; i++) { applyStyle(i); }
+            for(let i=1; i<=6; i++) {
+                const el = document.getElementById(`${prefix}P${i}`);
+                const isShow = document.getElementById(`p${i}Show`).checked;
+                const text = document.getElementById(`p${i}Text`).value;
+                if (isShow && text.trim() !== '') {
+                    el.innerText = text;
+                    el.style.fontWeight = document.getElementById(`p${i}Bold`).checked ? 'bold' : 'normal';
+                    el.style.fontStyle = document.getElementById(`p${i}Italic`).checked ? 'italic' : 'normal';
+                    el.style.fontSize = document.getElementById(`p${i}Size`).value + 'px';
+                    el.style.color = document.getElementById(`p${i}Color`).value;
+                    el.style.display = 'block';
+                } else { el.style.display = 'none'; }
+            }
 
-            const contactEl = document.getElementById('previewContact');
-            contactEl.innerText = document.getElementById('contactText').value;
-            contactEl.style.color = document.getElementById('tabColor').value;
-
-            document.getElementById('previewDivider').style.display = document.getElementById('showDivider').checked ? 'block' : 'none';
-            document.getElementById('previewDivider').style.borderColor = document.getElementById('tabColor').value;
+            document.getElementById(`${prefix}Contact`).innerText = document.getElementById('contactText').value;
+            document.getElementById(`${prefix}Contact`).style.color = document.getElementById('tabColor').value;
+            document.getElementById(`${prefix}Divider`).style.display = document.getElementById('showDivider').checked ? 'block' : 'none';
+            document.getElementById(`${prefix}Divider`).style.borderColor = document.getElementById('tabColor').value;
             
             if (document.getElementById('showBorder').checked) {
                 previewBox.style.border = `1px solid #e2e8f0`;
@@ -317,8 +365,8 @@
         }
 
         function saveAsJPG() {
-            const previewBox = document.getElementById('preview-container');
-            html2canvas(previewBox, { scale: 2, backgroundColor: null }).then(canvas => {
+            const previewBox = document.getElementById('admin-container');
+            html2canvas(previewBox, { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'agreement-thungkradas.jpg';
                 link.href = canvas.toDataURL('image/jpeg');
@@ -328,40 +376,27 @@
 
         function saveToDatabase(event) {
             const button = event.target;
-            const originalText = button.innerText;
             button.innerText = "กำลังบันทึก...";
-            
             let activeParas = [];
             for(let i=1; i<=6; i++) {
                 if(document.getElementById(`p${i}Show`).checked && document.getElementById(`p${i}Text`).value.trim() !== '') {
                     activeParas.push(document.getElementById(`p${i}Text`).value);
                 }
             }
+            const data = { title: document.getElementById('tabText').value, body: activeParas.join('\n\n') };
 
-            const data = {
-                title: document.getElementById('tabText').value,
-                body: activeParas.join('\n\n')
-            };
-
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify(data)
-            })
+            fetch(WEB_APP_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
             .then(() => {
                 alert("บันทึกข้อมูลสำเร็จ");
-                button.innerText = originalText;
-                fetchData(); 
-            })
-            .catch(() => {
+                button.innerText = "บันทึกข้อมูลเข้าระบบ";
+                fetchData('adminSavedRecords'); 
+            }).catch(() => {
                 alert("เกิดข้อผิดพลาด");
-                button.innerText = originalText;
+                button.innerText = "บันทึกข้อมูลเข้าระบบ";
             });
         }
         
-        // รันครั้งแรกตอนโหลดเว็บ
         updatePreview();
     </script>
-
 </body>
 </html>
