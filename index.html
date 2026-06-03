@@ -12,7 +12,7 @@
         h3 { margin-top: 0; }
         label { display: block; margin-top: 10px; font-size: 14px; font-weight: bold; }
         input[type="text"], select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; font-family: 'Prompt', sans-serif; }
-        textarea { height: 80px; resize: vertical; }
+        textarea { height: 70px; resize: vertical; }
         button { padding: 10px 20px; color: white; border: none; cursor: pointer; border-radius: 4px; font-family: 'Prompt', sans-serif; width: 100%; margin-bottom: 10px; margin-top: 10px; }
         .btn-jpg { background: #333; }
         .btn-jpg:hover { background: #555; }
@@ -21,10 +21,10 @@
         .btn-small { width: auto; margin: 0; padding: 8px 12px; background: #4285f4; }
         
         .para-box { border: 1px solid #ddd; padding: 10px; margin-top: 10px; border-radius: 4px; background: #fafafa; }
-        .inline-controls { display: flex; align-items: center; gap: 15px; margin-top: 8px; font-size: 14px; }
+        .inline-controls { display: flex; align-items: center; gap: 12px; margin-top: 8px; font-size: 13px; flex-wrap: wrap; }
         .inline-controls label { margin-top: 0; font-weight: normal; display: flex; align-items: center; gap: 5px; }
-        .inline-controls input[type="number"] { width: 60px; padding: 4px; }
-        .inline-controls input[type="color"] { width: 30px; height: 30px; padding: 0; border: none; cursor: pointer; }
+        .inline-controls input[type="number"] { width: 50px; padding: 4px; }
+        .inline-controls input[type="color"] { width: 25px; height: 25px; padding: 0; border: none; cursor: pointer; }
 
         #preview-container { padding: 40px; background-color: #ffffff; color: #000000; border-radius: 8px; white-space: pre-wrap; transition: all 0.3s; text-align: left; }
         .tabs { margin-bottom: 20px; display: inline-block; }
@@ -68,13 +68,13 @@
             <input type="color" id="tabColor" value="#333333" oninput="updatePreview()" title="สีพื้นหลัง Tab">
         </div>
 
-        <label>หัวเรื่องหลัก:</label>
-        <input type="text" id="titleText" value="สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)" oninput="updatePreview()">
-        <input type="color" id="titleColor" value="#000000" oninput="updatePreview()" style="margin-top: 5px;" title="สีหัวเรื่อง">
-
-        <label>รายละเอียดข้อตกลง (4 พารากราฟ):</label>
+        <label>รายละเอียดข้อตกลง (6 พารากราฟ):</label>
         
         <div class="para-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: bold;">พารากราฟ 1</span>
+                <label><input type="checkbox" id="p1Show" checked onchange="updatePreview()"> เปิดใช้งาน</label>
+            </div>
             <textarea id="p1Text" oninput="updatePreview()">พารากราฟที่ 1...</textarea>
             <div class="inline-controls">
                 <label><input type="checkbox" id="p1Bold" onchange="updatePreview()"> หนา</label>
@@ -85,6 +85,10 @@
         </div>
 
         <div class="para-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: bold;">พารากราฟ 2</span>
+                <label><input type="checkbox" id="p2Show" checked onchange="updatePreview()"> เปิดใช้งาน</label>
+            </div>
             <textarea id="p2Text" oninput="updatePreview()">พารากราฟที่ 2...</textarea>
             <div class="inline-controls">
                 <label><input type="checkbox" id="p2Bold" onchange="updatePreview()"> หนา</label>
@@ -95,6 +99,10 @@
         </div>
 
         <div class="para-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: bold;">พารากราฟ 3</span>
+                <label><input type="checkbox" id="p3Show" checked onchange="updatePreview()"> เปิดใช้งาน</label>
+            </div>
             <textarea id="p3Text" oninput="updatePreview()">พารากราฟที่ 3...</textarea>
             <div class="inline-controls">
                 <label><input type="checkbox" id="p3Bold" onchange="updatePreview()"> หนา</label>
@@ -105,12 +113,44 @@
         </div>
 
         <div class="para-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: bold;">พารากราฟ 4</span>
+                <label><input type="checkbox" id="p4Show" checked onchange="updatePreview()"> เปิดใช้งาน</label>
+            </div>
             <textarea id="p4Text" oninput="updatePreview()">พารากราฟที่ 4...</textarea>
             <div class="inline-controls">
                 <label><input type="checkbox" id="p4Bold" onchange="updatePreview()"> หนา</label>
                 <label><input type="checkbox" id="p4Italic" onchange="updatePreview()"> เอียง</label>
                 <label>ขนาด: <input type="number" id="p4Size" value="16" oninput="updatePreview()"> px</label>
                 <label>สี: <input type="color" id="p4Color" value="#000000" oninput="updatePreview()"></label>
+            </div>
+        </div>
+
+        <div class="para-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: bold;">พารากราฟ 5</span>
+                <label><input type="checkbox" id="p5Show" checked onchange="updatePreview()"> เปิดใช้งาน</label>
+            </div>
+            <textarea id="p5Text" oninput="updatePreview()">พารากราฟที่ 5...</textarea>
+            <div class="inline-controls">
+                <label><input type="checkbox" id="p5Bold" onchange="updatePreview()"> หนา</label>
+                <label><input type="checkbox" id="p5Italic" onchange="updatePreview()"> เอียง</label>
+                <label>ขนาด: <input type="number" id="p5Size" value="16" oninput="updatePreview()"> px</label>
+                <label>สี: <input type="color" id="p5Color" value="#000000" oninput="updatePreview()"></label>
+            </div>
+        </div>
+
+        <div class="para-box">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 14px; font-weight: bold;">พารากราฟ 6</span>
+                <label><input type="checkbox" id="p6Show" checked onchange="updatePreview()"> เปิดใช้งาน</label>
+            </div>
+            <textarea id="p6Text" oninput="updatePreview()">พารากราฟที่ 6...</textarea>
+            <div class="inline-controls">
+                <label><input type="checkbox" id="p6Bold" onchange="updatePreview()"> หนา</label>
+                <label><input type="checkbox" id="p6Italic" onchange="updatePreview()"> เอียง</label>
+                <label>ขนาด: <input type="number" id="p6Size" value="16" oninput="updatePreview()"> px</label>
+                <label>สี: <input type="color" id="p6Color" value="#000000" oninput="updatePreview()"></label>
             </div>
         </div>
 
@@ -131,13 +171,14 @@
             <div class="tabs">
                 <span class="tab" id="previewTab">สิทธิ์ส่วนตัว</span>
             </div>
-            <h2 id="previewTitle" style="margin-top: 10px;">สิทธิ์การใช้งาน: ประเภทส่วนตัว (Personal Use)</h2>
             <div id="previewDivider" class="divider"></div>
             
             <div id="previewP1" class="preview-para"></div>
             <div id="previewP2" class="preview-para"></div>
             <div id="previewP3" class="preview-para"></div>
             <div id="previewP4" class="preview-para"></div>
+            <div id="previewP5" class="preview-para"></div>
+            <div id="previewP6" class="preview-para"></div>
 
             <div id="previewContact" class="contact-box">ติดต่อ: thungkradas</div>
         </div>
@@ -170,25 +211,37 @@
             if (index === "") return;
             
             const item = fetchedData[index];
-            document.getElementById('titleText').value = item.title;
+            document.getElementById('tabText').value = item.title;
             
             const paras = item.body.split('\n\n');
-            document.getElementById('p1Text').value = paras[0] || '';
-            document.getElementById('p2Text').value = paras[1] || '';
-            document.getElementById('p3Text').value = paras[2] || '';
-            document.getElementById('p4Text').value = paras[3] || '';
+            for(let i=1; i<=6; i++) {
+                if (paras[i-1]) {
+                    document.getElementById(`p${i}Text`).value = paras[i-1];
+                    document.getElementById(`p${i}Show`).checked = true;
+                } else {
+                    document.getElementById(`p${i}Text`).value = '';
+                    document.getElementById(`p${i}Show`).checked = false;
+                }
+            }
             
             updatePreview();
         }
 
         function applyStyle(num) {
             const el = document.getElementById(`previewP${num}`);
-            el.innerText = document.getElementById(`p${num}Text`).value;
-            el.style.fontWeight = document.getElementById(`p${num}Bold`).checked ? 'bold' : 'normal';
-            el.style.fontStyle = document.getElementById(`p${num}Italic`).checked ? 'italic' : 'normal';
-            el.style.fontSize = document.getElementById(`p${num}Size`).value + 'px';
-            el.style.color = document.getElementById(`p${num}Color`).value;
-            el.style.display = document.getElementById(`p${num}Text`).value.trim() === '' ? 'none' : 'block';
+            const isShow = document.getElementById(`p${num}Show`).checked;
+            const text = document.getElementById(`p${num}Text`).value;
+            
+            if (isShow && text.trim() !== '') {
+                el.innerText = text;
+                el.style.fontWeight = document.getElementById(`p${num}Bold`).checked ? 'bold' : 'normal';
+                el.style.fontStyle = document.getElementById(`p${num}Italic`).checked ? 'italic' : 'normal';
+                el.style.fontSize = document.getElementById(`p${num}Size`).value + 'px';
+                el.style.color = document.getElementById(`p${num}Color`).value;
+                el.style.display = 'block';
+            } else {
+                el.style.display = 'none';
+            }
         }
 
         function updatePreview() {
@@ -199,20 +252,17 @@
             document.getElementById('previewTab').innerText = document.getElementById('tabText').value;
             document.getElementById('previewTab').style.backgroundColor = document.getElementById('tabColor').value;
             document.getElementById('previewTab').style.color = document.getElementById('bgColor').value;
-
-            document.getElementById('previewTitle').innerText = document.getElementById('titleText').value;
-            document.getElementById('previewTitle').style.color = document.getElementById('titleColor').value;
             
-            for(let i=1; i<=4; i++) { applyStyle(i); }
+            for(let i=1; i<=6; i++) { applyStyle(i); }
 
             document.getElementById('previewContact').innerText = document.getElementById('contactText').value;
-            document.getElementById('previewContact').style.color = document.getElementById('titleColor').value;
+            document.getElementById('previewContact').style.color = document.getElementById('tabColor').value;
 
             document.getElementById('previewDivider').style.display = document.getElementById('showDivider').checked ? 'block' : 'none';
-            document.getElementById('previewDivider').style.borderColor = document.getElementById('titleColor').value;
+            document.getElementById('previewDivider').style.borderColor = document.getElementById('tabColor').value;
             
             if (document.getElementById('showBorder').checked) {
-                previewBox.style.border = `2px solid ${document.getElementById('titleColor').value}`;
+                previewBox.style.border = `2px solid ${document.getElementById('tabColor').value}`;
             } else {
                 previewBox.style.border = 'none';
             }
@@ -233,16 +283,16 @@
             const originalText = button.innerText;
             button.innerText = "กำลังบันทึก...";
             
-            const allBodyText = [
-                document.getElementById('p1Text').value,
-                document.getElementById('p2Text').value,
-                document.getElementById('p3Text').value,
-                document.getElementById('p4Text').value
-            ].filter(text => text.trim() !== '').join('\n\n');
+            let activeParas = [];
+            for(let i=1; i<=6; i++) {
+                if(document.getElementById(`p${i}Show`).checked && document.getElementById(`p${i}Text`).value.trim() !== '') {
+                    activeParas.push(document.getElementById(`p${i}Text`).value);
+                }
+            }
 
             const data = {
-                title: document.getElementById('titleText').value,
-                body: allBodyText
+                title: document.getElementById('tabText').value,
+                body: activeParas.join('\n\n')
             };
 
             fetch(WEB_APP_URL, {
