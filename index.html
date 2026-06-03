@@ -12,6 +12,8 @@
             margin: 0; 
             padding: 20px; 
             background-color: #f3f4f6; 
+            display: flex; 
+            gap: 20px; 
             height: 100vh; 
             box-sizing: border-box;
             color: #333;
@@ -21,7 +23,7 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
 
-        .page { display: none; gap: 20px; height: calc(100vh - 40px); }
+        .page { display: none; gap: 20px; height: calc(100vh - 40px); width: 100%; }
         .page.active { display: flex; }
 
         .settings-panel {
@@ -31,6 +33,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            flex-shrink: 0;
         }
         
         .preview-panel {
@@ -104,14 +107,24 @@
         .preview-para { margin-bottom: 2px; }
 
         .login-container { max-width: 350px; margin: 100px auto; text-align: center; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+
+        /* แก้ไขระบบให้รองรับมือถือ */
+        @media (max-width: 768px) {
+            body { display: block; height: auto; padding: 10px; }
+            .page.active { display: block; height: auto; }
+            .settings-panel { width: 100%; max-height: none; overflow-y: visible; padding-right: 0; }
+            .preview-panel { width: 100%; margin-top: 20px; padding: 20px 10px; border-radius: 12px; }
+            .preview-box { padding: 20px; max-width: 100%; }
+            .login-container { margin: 40px auto; }
+        }
     </style>
 </head>
 <body>
 
     <div id="page-public" class="page active">
         <div class="preview-panel" style="border-radius: 12px;">
-            <div class="card" style="display: flex; gap: 10px; align-items: center; margin-bottom: 0;">
-                <select id="publicSavedRecords" style="margin: 0; flex: 1;">
+            <div class="card" style="display: flex; gap: 10px; align-items: center; margin-bottom: 0; flex-wrap: wrap;">
+                <select id="publicSavedRecords" style="margin: 0; flex: 1; min-width: 150px;">
                     <option value="">-- รอโหลดข้อมูล --</option>
                 </select>
                 <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('publicSavedRecords')">โหลดชื่อ</button>
@@ -147,12 +160,12 @@
     <div id="page-admin" class="page">
         <div class="settings-panel">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center;" class="card-title">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap:10px;" class="card-title">
                     <span>ดึงข้อมูลที่เคยบันทึก</span>
                     <button class="btn-nav" onclick="switchPage('page-public')" style="margin:0; padding:4px 10px;">ออกจากระบบ</button>
                 </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <select id="adminSavedRecords" style="margin: 0; flex: 1;">
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <select id="adminSavedRecords" style="margin: 0; flex: 1; min-width: 150px;">
                         <option value="">-- รอโหลดข้อมูล --</option>
                     </select>
                     <button class="btn-small" style="background: #f59e0b;" onclick="fetchData('adminSavedRecords')">โหลดชื่อ</button>
@@ -176,11 +189,11 @@
                     <option value="sans-serif">System Default</option>
                 </select>
                 <label>สีพื้นหลังหน้ากระดาษ:</label>
-                <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()" style="height:35px; border:none; padding:0;">
+                <input type="color" id="bgColor" value="#ffffff" oninput="updatePreview()" style="height:35px; border:none; padding:0; cursor:pointer;">
                 <label>หัวข้อ (Tab):</label>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <input type="text" id="tabText" value="สิทธิ์ส่วนตัว" oninput="updatePreview()">
-                    <input type="color" id="tabColor" value="#333333" oninput="updatePreview()" style="width:40px; height:38px; padding:0; border:none;">
+                    <input type="color" id="tabColor" value="#333333" oninput="updatePreview()" style="width:40px; height:38px; padding:0; border:none; cursor:pointer;">
                 </div>
             </div>
 
@@ -207,10 +220,10 @@
                 </script>
                 <label>ช่องทางติดต่อ (ล่างสุด):</label>
                 <textarea id="contactText" oninput="updatePreview()">ติดต่อ: thungkradas</textarea>
-                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; margin-top:15px;">
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; margin-top:15px; cursor:pointer;">
                     <input type="checkbox" id="showDivider" onchange="updatePreview()"> แสดงเส้นคั่นก่อนเนื้อหา
                 </label>
-                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; margin-top: 5px;">
+                <label style="display: flex; align-items: center; gap: 5px; font-weight: normal; margin-top: 5px; cursor:pointer;">
                     <input type="checkbox" id="showBorder" onchange="updatePreview()"> ใส่กรอบรอบกระดาษ
                 </label>
             </div>
@@ -248,9 +261,9 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.getElementById('passwordInput').value = '';
+            window.scrollTo(0,0);
         }
 
-        // ดึงรหัสผ่านปัจจุบันจากระบบจำข้อมูล
         function getActivePassword() {
             return localStorage.getItem('adminPassword') || '1212312121';
         }
