@@ -26,12 +26,12 @@
         .inline-controls input[type="number"] { width: 50px; padding: 4px; }
         .inline-controls input[type="color"] { width: 25px; height: 25px; padding: 0; border: none; cursor: pointer; }
 
-        #preview-container { padding: 40px; background-color: #ffffff; color: #000000; border-radius: 8px; white-space: pre-wrap; transition: all 0.3s; text-align: left; }
-        .tabs { margin-bottom: 20px; display: inline-block; }
-        .tab { padding: 5px 15px; background: #333; border-radius: 4px; font-size: 14px; color: #fff; font-weight: bold; }
+        #preview-container { padding: 40px; background-color: #ffffff; color: #000000; border-radius: 8px; white-space: pre-wrap; transition: all 0.3s; text-align: left; line-height: 1.4; }
+        .tabs { margin-bottom: 20px; display: block; text-align: left; }
+        .tab { padding: 5px 15px; background: #333; border-radius: 4px; font-size: 14px; color: #fff; font-weight: bold; display: inline-block; }
         .divider { border-bottom: 1px solid #ccc; margin: 15px 0; display: none; }
         .contact-box { margin-top: 20px; font-size: 12px; }
-        .preview-para { margin-bottom: 10px; }
+        .preview-para { margin-bottom: 4px; }
         
         .load-box { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #bbdefb; }
     </style>
@@ -40,17 +40,17 @@
 
     <div class="panel">
         <div class="load-box">
-            <h3 style="margin-bottom: 10px; font-size: 16px;">📥 ดึงข้อมูลที่เคยบันทึก</h3>
+            <h3 style="margin-bottom: 10px; font-size: 16px;">ดึงข้อมูลที่เคยบันทึก</h3>
             <div style="display: flex; gap: 10px; align-items: center;">
                 <select id="savedRecords" style="margin: 0; flex: 1;">
                     <option value="">-- กดปุ่มโหลดข้อมูล --</option>
                 </select>
-                <button class="btn-small" onclick="fetchData()" style="background: #f4b400;">🔄 โหลดชื่อ</button>
-                <button class="btn-small" onclick="loadSelected()">📂 เปิดอ่าน</button>
+                <button class="btn-small" onclick="fetchData()" style="background: #f4b400;">โหลดชื่อ</button>
+                <button class="btn-small" onclick="loadSelected()">เปิดอ่าน</button>
             </div>
         </div>
 
-        <h3>⚙️ ตั้งค่าข้อตกลง</h3>
+        <h3>ตั้งค่าข้อตกลง</h3>
         
         <label>ฟอนต์หลัก:</label>
         <select id="fontFamily" onchange="updatePreview()">
@@ -161,12 +161,12 @@
         <input type="checkbox" id="showDivider" style="width: auto;" onchange="updatePreview()"> <span style="font-size: 14px;">แสดงเส้นคั่นข้อความ</span><br>
         <input type="checkbox" id="showBorder" style="width: auto;" onchange="updatePreview()"> <span style="font-size: 14px;">ใส่กรอบให้หน้าแสดงผล</span>
 
-        <button class="btn-jpg" onclick="saveAsJPG()">💾 บันทึกเป็นรูป JPG</button>
-        <button class="btn-save" onclick="saveToDatabase(event)">☁️ บันทึกข้อมูลระบบหลังบ้าน</button>
+        <button class="btn-jpg" onclick="saveAsJPG()">บันทึกเป็นรูป JPG</button>
+        <button class="btn-save" onclick="saveToDatabase(event)">บันทึกข้อมูลระบบหลังบ้าน</button>
     </div>
 
     <div class="panel">
-        <h3>👀 แสดงผล</h3>
+        <h3>แสดงผล</h3>
         <div id="preview-container">
             <div class="tabs">
                 <span class="tab" id="previewTab">สิทธิ์ส่วนตัว</span>
